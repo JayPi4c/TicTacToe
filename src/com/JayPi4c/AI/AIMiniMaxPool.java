@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.JayPi4c.game.Field;
 import com.JayPi4c.game.Spot;
 
-public class AIMiniMaxPool implements AIPlayer {
+public class AIMiniMaxPool extends AIMiniMax {
 	@Override
 	public void doMove(Field field) {
 		double bestScore = -9999;
@@ -30,35 +30,4 @@ public class AIMiniMaxPool implements AIPlayer {
 		targetSpots.get((int) (targetSpots.size() * Math.random())).setState(Spot.STATE.O);
 	}
 
-	public double minimax(Field f, int depth, boolean isMaximazing) {
-		Spot.STATE winner = f.getWinner();
-
-		if (winner == Spot.STATE.TIE)
-			return 0;
-		if (winner == Spot.STATE.O)
-			return 10;
-		if (winner == Spot.STATE.X)
-			return -10;
-
-		if (isMaximazing) {
-			double bestScore = -9999;
-			for (Spot s : f.getFreeSpots()) {
-				Field f_ = f.copy();
-				f_.setSpot(s.getI(), s.getJ(), Spot.STATE.O);
-				double score = minimax(f_, depth - 1, false);
-				bestScore = Math.max(score, bestScore);
-			}
-			return bestScore;
-		} else {
-			double bestScore = 9999;
-			for (Spot s : f.getFreeSpots()) {
-				Field f_ = f.copy();
-				f_.setSpot(s.getI(), s.getJ(), Spot.STATE.X);
-				double score = minimax(f_, depth - 1, true);
-				bestScore = Math.min(score, bestScore);
-			}
-			return bestScore;
-		}
-
-	}
 }

@@ -24,16 +24,28 @@ public class Game extends JPanel implements MouseListener {
 
 	boolean singlePlayer = true;
 	AIPlayer ai;
+
+	private AIPlayer newAI = null;
+
 	boolean AIStart = true;
 
 	public Game() {
-		setSize(new Dimension(Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+		setPreferredSize(new Dimension(Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 		f = new Field();
 		moveCount = 0;
 		this.addMouseListener(this);
 		ai = new AIMiniMaxPool();
-		if (AIStart)
+		if (!singlePlayer && AIStart)
 			ai.doMove(f);
+	}
+
+	public void setNewAI(AIPlayer player) {
+		newAI = player;
+		singlePlayer = true;
+	}
+
+	public void setSinglePlayer(boolean singlePlayer) {
+		this.singlePlayer = singlePlayer;
 	}
 
 	@Override
@@ -95,6 +107,10 @@ public class Game extends JPanel implements MouseListener {
 				if (choice == JOptionPane.NO_OPTION)
 					System.exit(0);
 				f = new Field();
+				if (newAI != null) {
+					ai = newAI;
+					newAI = null;
+				}
 				if (AIStart)
 					ai.doMove(f);
 				repaint();
